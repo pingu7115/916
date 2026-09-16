@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="aurora">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蕭宥瑄 • Personal Hub</title>
+  <meta name="description" content="A sleek, interactive personal dashboard featuring live real-time clock, personalized greeting, day progress tracker, and customizable workspace links.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="mesh-grid"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Top Navigation & Control Bar -->
+    <header class="top-nav" id="main-header">
+      <div class="brand-badge">
+        <span class="pulsing-dot"></span>
+        <span class="brand-text">PERSONAL PULSE</span>
+      </div>
+
+      <div class="nav-controls">
+        <!-- 12h / 24h Toggle -->
+        <button id="time-format-btn" class="pill-btn" aria-label="Toggle 12/24 hour time format" title="Toggle 12/24 Hour Format">
+          <span class="pill-icon">⏱️</span>
+          <span id="format-label">24H</span>
+        </button>
+
+        <!-- Sound tick toggle -->
+        <button id="sound-toggle-btn" class="pill-btn" aria-label="Toggle subtle ticking sound" title="Toggle Clock Sound">
+          <span id="sound-icon">🔇</span>
+        </button>
+
+        <!-- Theme Switcher -->
+        <div class="theme-dropdown-container">
+          <button id="theme-btn" class="pill-btn" aria-label="Change Theme" title="Customize Ambient Color">
+            <span class="theme-swatch"></span>
+            <span id="theme-name">Aurora</span>
+          </button>
+          <div class="theme-menu" id="theme-menu">
+            <button class="theme-option active" data-theme="aurora">
+              <span class="color-dot aurora"></span> Aurora Violet
+            </button>
+            <button class="theme-option" data-theme="midnight">
+              <span class="color-dot midnight"></span> Midnight Blue
+            </button>
+            <button class="theme-option" data-theme="sunset">
+              <span class="color-dot sunset"></span> Sunset Ember
+            </button>
+            <button class="theme-option" data-theme="emerald">
+              <span class="color-dot emerald"></span> Cyber Emerald
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="dashboard-grid">
+      <!-- Profile & Identity Card -->
+      <section class="glass-card profile-card" id="profile-section">
+        <div class="avatar-wrapper">
+          <div class="avatar-circle" id="avatar-display">
+            <span id="avatar-initials">宥瑄</span>
+          </div>
+          <button class="avatar-status-pill" id="status-picker-btn" title="Click to update status">
+            <span id="current-status-emoji">⚡</span>
+            <span id="current-status-text">In The Flow</span>
+          </button>
+        </div>
+
+        <div class="greeting-container">
+          <div class="time-greeting-row">
+            <span class="greeting-icon" id="greeting-icon">☀️</span>
+            <span class="greeting-prefix" id="greeting-prefix">Good morning,</span>
+          </div>
+
+          <div class="name-edit-group">
+            <h1 class="user-display-name" id="user-display-name" title="Click to edit your name">
+              蕭宥瑄
+            </h1>
+            <input type="text" id="name-input" class="name-inline-input hidden" maxlength="32" placeholder="Your Name">
+            <button class="edit-badge-btn" id="edit-name-btn" aria-label="Edit Name" title="Edit name">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="bio-row">
+            <p class="user-bio" id="user-bio" title="Click to edit your title">
+              Software Crafter &amp; Creative Explorer
+            </p>
+            <input type="text" id="bio-input" class="bio-inline-input hidden" maxlength="60" placeholder="Your role or motto">
+          </div>
+        </div>
+
+        <div class="location-badge" id="timezone-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span id="timezone-text">Detecting timezone...</span>
+        </div>
+      </section>
+
+      <!-- Main Clock Card -->
+      <section class="glass-card clock-card" id="clock-section">
+        <div class="clock-top-meta">
+          <div class="live-tag">
+            <span class="beacon-ring"></span>
+            <span class="beacon-core"></span>
+            LIVE TIME
+          </div>
+          <div class="date-display" id="date-display">
+            Wednesday, September 16, 2026
+          </div>
+        </div>
+
+        <!-- Huge Digital Clock Readout -->
+        <div class="clock-display-wrapper">
+          <div class="clock-digits-group" id="clock-digits">
+            <span class="digit-unit" id="hours">10</span>
+            <span class="digit-separator" id="separator-1">:</span>
+            <span class="digit-unit" id="minutes">15</span>
+            <span class="digit-separator" id="separator-2">:</span>
+            <span class="digit-unit seconds-unit" id="seconds">42</span>
+          </div>
+          <span class="ampm-unit hidden" id="ampm-tag">AM</span>
+        </div>
+
+        <!-- Day Progress Tracker -->
+        <div class="daylight-tracker">
+          <div class="tracker-meta">
+            <span class="tracker-label">Day Progress</span>
+            <span class="tracker-val" id="day-progress-val">42.8%</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuenow="42.8" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" id="day-progress-bar"></div>
+            <div class="progress-marker" id="progress-marker" title="Now"></div>
+          </div>
+          <div class="day-milestones">
+            <span>00:00 Dawn</span>
+            <span>12:00 Midday</span>
+            <span>23:59 Midnight</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Secondary Row: World Clock Glance & Daily Focus -->
+      <section class="glass-card secondary-card world-time-card" id="world-clock-section">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">🌐</span> Global Horizons
+          </h2>
+          <span class="card-subtitle">Real-time reference</span>
+        </div>
+        <div class="world-cities-grid">
+          <div class="city-item" data-tz="Asia/Tokyo">
+            <div class="city-info">
+              <span class="city-name">Tokyo</span>
+              <span class="city-offset">JST • UTC+9</span>
+            </div>
+            <span class="city-time" id="time-tokyo">--:--</span>
+          </div>
+          <div class="city-item" data-tz="Europe/London">
+            <div class="city-info">
+              <span class="city-name">London</span>
+              <span class="city-offset">BST • UTC+1</span>
+            </div>
+            <span class="city-time" id="time-london">--:--</span>
+          </div>
+          <div class="city-item" data-tz="America/New_York">
+            <div class="city-info">
+              <span class="city-name">New York</span>
+              <span class="city-offset">EDT • UTC-4</span>
+            </div>
+            <span class="city-time" id="time-newyork">--:--</span>
+          </div>
+          <div class="city-item" data-tz="America/Los_Angeles">
+            <div class="city-info">
+              <span class="city-name">San Francisco</span>
+              <span class="city-offset">PDT • UTC-7</span>
+            </div>
+            <span class="city-time" id="time-sf">--:--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Daily Quest & Scratchpad Card -->
+      <section class="glass-card secondary-card focus-card" id="focus-section">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="card-icon">🎯</span> Today's Quest
+          </h2>
+          <span class="save-status-indicator" id="focus-save-status">Saved</span>
+        </div>
+        <div class="focus-input-area">
+          <textarea id="daily-focus-text" class="focus-textarea" placeholder="What is your singular priority or thought for today?" rows="3"></textarea>
+        </div>
+        <div class="focus-footer">
+          <span class="keyboard-tip">Auto-saves locally</span>
+          <button class="clear-focus-btn" id="clear-focus-btn" title="Clear note">Clear</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Floating Dock / Quick Links -->
+    <footer class="dock-container" id="links-dock">
+      <nav class="quick-links-dock" aria-label="Social and Quick Links">
+        <a href="https://github.com/pingu7115/916" target="_blank" rel="noopener noreferrer" class="dock-item" title="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+          <span class="dock-label">GitHub</span>
+        </a>
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="dock-item" title="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+          <span class="dock-label">LinkedIn</span>
+        </a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="dock-item" title="X (Twitter)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4l11.733 16h4.267l-11.733-16z"></path>
+            <path d="M4 20l6.768-6.768m2.464-2.464l6.768-6.768"></path>
+          </svg>
+          <span class="dock-label">X / Twitter</span>
+        </a>
+        <a href="mailto:hello@example.com" class="dock-item" id="dock-email-link" title="Send Email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <span class="dock-label">Contact</span>
+        </a>
+      </nav>
+    </footer>
+  </div>
+
+  <!-- Status Picker Modal -->
+  <div class="modal-backdrop hidden" id="status-modal" aria-hidden="true">
+    <div class="status-modal-content glass-card" role="dialog" aria-labelledby="status-modal-title">
+      <h3 id="status-modal-title">Update Your Status</h3>
+      <div class="status-presets">
+        <button class="status-choice" data-emoji="⚡" data-text="In The Flow">
+          <span class="status-choice-emoji">⚡</span>
+          <span class="status-choice-text">In The Flow</span>
+        </button>
+        <button class="status-choice" data-emoji="🌱" data-text="Learning & Exploring">
+          <span class="status-choice-emoji">🌱</span>
+          <span class="status-choice-text">Learning &amp; Exploring</span>
+        </button>
+        <button class="status-choice" data-emoji="☕" data-text="Coffee Break">
+          <span class="status-choice-emoji">☕</span>
+          <span class="status-choice-text">Coffee Break</span>
+        </button>
+        <button class="status-choice" data-emoji="🚀" data-text="Shipping Code">
+          <span class="status-choice-emoji">🚀</span>
+          <span class="status-choice-text">Shipping Code</span>
+        </button>
+        <button class="status-choice" data-emoji="🌙" data-text="Recharging">
+          <span class="status-choice-emoji">🌙</span>
+          <span class="status-choice-text">Recharging</span>
+        </button>
+      </div>
+      <div class="status-custom-row">
+        <input type="text" id="custom-emoji-input" class="emoji-input" maxlength="2" placeholder="✨">
+        <input type="text" id="custom-text-input" class="status-text-input" maxlength="24" placeholder="Custom status...">
+        <button id="save-custom-status-btn" class="pill-btn primary">Save</button>
+      </div>
+      <button class="close-modal-btn" id="close-status-modal">Cancel</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
